@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">Presence Detection</string>
+
+
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+
+     <string name="title_activity_beacon_scan">BeaconScanActivity</string>
+    <string name="serial_number_title">SERIAL NUMBER</string>
+    <string name="label_proximity_uuid">Proximity UUID:</string>
+    <string name="select_uuid_title">Select UUID</string>
+    <string name="generate">GENERATE</string>
+    <string name="select">SELECT</string>
+    <string name="major_minor_header_text">MAJOR/MINOR</string>
+    <string name="major">Major</string>
+    <string name="minor">Minor</string>
+    <string name="activate">ACTIVATE</string>
+    <string name="dialog_no_uuid">UUID must be generated before selecting.</string>
+    <string name="dialog_uuid_generated">UUID generated! Tap SELECT to select UUID.</string>
+    <string name="button_ok">OK</string>
+    <string name="dialog_invalid_auth_code">Invalid authorization code.</string>
+    <string name="dialog_activation_failed">Activation failed.</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="unknown_device">Unknown device</string>
+    <string name="edit_major">Please edit major</string>
+    <string name="edit_minor">Please edit minor</string>
+    <string name="label_minor">Minor:</string>
+    <string name="label_device_address">Device MAC address:</string>
+    <string name="data_value">Data value:</string>
+    <string name="label_major">Major:</string>
+    <string name="label_device_rssi">RSSI:</string>
+    <string name="label_device_name">Name:</string>
+    <string name="label_device_uuid">UUID:</string>
+    <string name="label_device_serialnumber">Serial NR:</string>
+    <string name="configuration">CONFIGURATION</string>
+    <string name="generate_proximity_uuid">Tap GENERATE to generate UUID</string>
+    <string name="dialog_invalid_major_minor">Major and Minor must be 2 digits</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="no_data">No data</string>
+    <string name="label_data">Data:</string>
+    <string name="label_state">State:</string>
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="unknown_service">Unknown service</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="write_char">Write Char</string>
+    <string name="gatt_services_discovered">Gatt services discovered</string>
+    <string name="scan_to_activate">Scan to activate Close Beacon</string>
+    <string name="scan_active_beacon">Scan active Close Beacon</string>
+    <string name="active_close_beacons">Active Close Beacons</string>
+    <string name="stop_scan">Stop Scan</string>
+</resources>
