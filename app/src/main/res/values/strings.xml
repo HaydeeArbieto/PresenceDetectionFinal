@@ -5,7 +5,7 @@
     <string name="firstname">Firstname</string>
     <string name="lastname">Lastname</string>
 
-     <string name="title_activity_beacon_scan">BeaconScanActivity</string>
+    <string name="title_activity_beacon_scan">BeaconScanActivity</string>
     <string name="serial_number_title">SERIAL NUMBER</string>
     <string name="label_proximity_uuid">Proximity UUID:</string>
     <string name="select_uuid_title">Select UUID</string>

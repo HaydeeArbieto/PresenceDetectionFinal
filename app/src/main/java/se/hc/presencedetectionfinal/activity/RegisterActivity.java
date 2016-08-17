@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -46,10 +47,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        responseHandler = new ResponseHandler(USER_ID);
-        //preferences = getSharedPreferences(name, MODE_PRIVATE);
-        preferences = getSharedPreferences(USER_ID, 0);
-        preferences.edit().putString("1", name).apply();
+        //responseHandler = new ResponseHandler(USER_ID);
+        preferences = getSharedPreferences(USER_ID, MODE_PRIVATE);
+
+        //preferences.edit().putString("1", name).apply();
         buttonRegister = (Button) findViewById(R.id.button_send);
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);

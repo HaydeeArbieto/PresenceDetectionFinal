@@ -27,15 +27,16 @@
             </intent-filter>
         </activity>
 
-        <!--activity android:name=".activity.ScanActivity" /-->
-        <!--activity android:name=".activity.DeviceDetailsActivity" /-->
-        <!--<activity android:name=".activity.DeviceControlActivity" /-->
-        <!--activity android:name=".activity.RangingActivity" /-->
+        <!-- activity android:name=".activity.ScanActivity" / -->
+        <!-- activity android:name=".activity.DeviceDetailsActivity" / -->
+        <!-- <activity android:name=".activity.DeviceControlActivity" / -->
+        <!-- activity android:name=".activity.RangingActivity" / -->
 
         <service
             android:name=".service.BluetoothLeService"
             android:enabled="true" />
 
+        <activity android:name=".activity.ScanAndSuscribeActivity"></activity>
     </application>
 
 </manifest>

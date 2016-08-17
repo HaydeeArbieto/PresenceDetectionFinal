@@ -8,14 +8,17 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import se.hc.presencedetectionfinal.model.MessageResponse;
+import se.hc.presencedetectionfinal.model.User;
 
 
 public interface AppService {
 
     @FormUrlEncoded
     @POST("register_user")
-    Call<JSONObject> register_user(@Field("input") String request);
+    //Call<JSONObject> register_user(@Field("input") String request);
 
+    Call<MessageResponse> register_user(@Field("input") String request);
     //public void register_user(@Field("first_name") String first_name, @Field("last_name") String last_name,
      //                    Callback<User> callback);
 
