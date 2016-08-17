@@ -1,5 +1,7 @@
 package se.hc.presencedetectionfinal.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,22 +14,29 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import se.hc.presencedetectionfinal.R;
+import se.hc.presencedetectionfinal.model.MessageResponse;
+import se.hc.presencedetectionfinal.model.User;
+import se.hc.presencedetectionfinal.model.comparator.ResponseHandler;
 import se.hc.presencedetectionfinal.service.AppService;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String USER_ID = "se.hc.presencedetection.USER_ID";
+    public static final String USER_ID = "se.hc.presencedetectionfinal.USER_ID";
     public static final String REGISTER_USER_URL = "http://beacons.zenzor.io/sys/api/";
     public static final String TAG = RegisterActivity.class.getSimpleName();
+    public SharedPreferences preferences;
+
+    String name;
+
+    private Context context = this;
+    private MessageResponse messageResponse;
+    private ResponseHandler responseHandler;
 
     Button buttonRegister;
     EditText first_name, last_name;
@@ -37,6 +46,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        responseHandler = new ResponseHandler(USER_ID);
+        //preferences = getSharedPreferences(name, MODE_PRIVATE);
+        preferences = getSharedPreferences(USER_ID, 0);
+        preferences.edit().putString("1", name).apply();
         buttonRegister = (Button) findViewById(R.id.button_send);
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);
@@ -46,13 +59,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        //switch (view.getId()) {
-         //   case R.id.button_send:
+
                 if (first_name.getText().toString().isEmpty() || last_name.getText().toString().isEmpty()) {
                     Toast.makeText(getApplicationContext(), "Write your firstname and lastname", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    final SharedPreferences preferences = getSharedPreferences(USER_ID, MODE_PRIVATE);
 
                     if (!preferences.getBoolean(USER_ID, false)) {
 
@@ -63,67 +74,41 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 .addConverterFactory(GsonConverterFactory.create(gson))
                                 .build();
 
-                        JSONObject jsonRequest = new JSONObject();
-
-                        try {
-                            jsonRequest.put("api_key", "28742sk238sdkAdhfue243jdfhvnsa1923347");
-                            jsonRequest.put("first_name", first_name.getText().toString());
-                            jsonRequest.put("last_name", last_name.getText().toString());
-
-                            Log.d("Json Request", jsonRequest.toString());
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
+                        User user = new User (first_name.getText().toString(), last_name.getText().toString());
+                        Log.d("Request", gson.toJson(user).toString());
 
                         final AppService appService = retrofit.create(AppService.class);
-                        final Call<JSONObject> result = appService.register_user(jsonRequest.toString());
+                        final Call<MessageResponse> result = appService.register_user(gson.toJson(user));
 
-                        result.enqueue(new Callback<JSONObject>() {
+                        result.enqueue(new Callback<MessageResponse>() {
                             @Override
-                            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
 
-                                JSONObject jsonResponse = response.body();
+                                MessageResponse auxiliar = response.body();
+                               // responseHandler.setUserId(auxiliar.getId_user());
+                                Log.d("Response1", response.message());
+                                Log.d("Response2", auxiliar.getId_user());
 
-                                Log.d(TAG, "{response_value:" + response.raw().code() +  ", "  + "user_id" + "");
-                                Log.d(TAG, "Response " + response.raw());
-                                Log.d(TAG, "Response " + response.isSuccessful());
+                                preferences.edit().putString(USER_ID, auxiliar.getId_user()).apply();
+                                Log.d("Sharepreference***", USER_ID);
 
-
-                                String userIdAsString = response.body().toString();
-
+                                Intent intent =  new Intent(context, ScanAndSuscribeActivity.class);
+                                startActivity(intent);
                             }
 
                             @Override
-                            public void onFailure(Call<JSONObject> call, Throwable t) {
+                            public void onFailure(Call<MessageResponse> call, Throwable t) {
 
-                                Log.d(TAG, "Could not fetch userid: " + t.getMessage());
+                                Log.d(TAG, "Could not fetch users id: " + t.getMessage());
                             }
                         });
 
-                    } /*else {
+                    } else {
 
-                       if (scanToActivateButton != null) {
-
-                           scanToActivateButton.setOnClickListener(new View.OnClickListener() {
-
-                               @Override
-                               public void onClick(View view) {
-
-                                   final Intent scanIntent = new Intent(context, ScanActivity.class);
-                                   startActivity(scanIntent);
-                               }
-                           });
-                       }
+                        Intent intent =  new Intent(context, ScanAndSuscribeActivity.class);
+                        startActivity(intent);
                    }
                }
-
-                Intent intent = new Intent(this, ScanActivity.class);
-
-               }*/
-
-               // }
-        }
     }
 }
+
