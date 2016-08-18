@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -33,11 +32,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public static final String TAG = RegisterActivity.class.getSimpleName();
     public SharedPreferences preferences;
 
-    String name;
-
     private Context context = this;
     private MessageResponse messageResponse;
-    private ResponseHandler responseHandler;
 
     Button buttonRegister;
     EditText first_name, last_name;
@@ -47,10 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //responseHandler = new ResponseHandler(USER_ID);
         preferences = getSharedPreferences(USER_ID, MODE_PRIVATE);
-
-        //preferences.edit().putString("1", name).apply();
         buttonRegister = (Button) findViewById(R.id.button_send);
         first_name = (EditText) findViewById(R.id.first_name);
         last_name = (EditText) findViewById(R.id.last_name);
@@ -61,55 +54,54 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
 
-                if (first_name.getText().toString().isEmpty() || last_name.getText().toString().isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Write your firstname and lastname", Toast.LENGTH_SHORT).show();
+        if (first_name.getText().toString().isEmpty() || last_name.getText().toString().isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Write your firstname and lastname", Toast.LENGTH_SHORT).show();
 
-                } else {
+        } else {
 
-                    if (!preferences.getBoolean(USER_ID, false)) {
+            if (!preferences.getBoolean(USER_ID, false)) {
 
-                        Gson gson = new GsonBuilder().create();
+                Gson gson = new GsonBuilder().create();
 
-                        final Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl(REGISTER_USER_URL)
-                                .addConverterFactory(GsonConverterFactory.create(gson))
-                                .build();
+                final Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(REGISTER_USER_URL)
+                        .addConverterFactory(GsonConverterFactory.create(gson))
+                        .build();
 
-                        User user = new User (first_name.getText().toString(), last_name.getText().toString());
-                        Log.d("Request", gson.toJson(user).toString());
+                User user = new User (first_name.getText().toString(), last_name.getText().toString());
+                Log.d("Request", gson.toJson(user).toString());
 
-                        final AppService appService = retrofit.create(AppService.class);
-                        final Call<MessageResponse> result = appService.register_user(gson.toJson(user));
+                final AppService appService = retrofit.create(AppService.class);
+                final Call<MessageResponse> result = appService.register_user(gson.toJson(user));
 
-                        result.enqueue(new Callback<MessageResponse>() {
-                            @Override
-                            public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
+                result.enqueue(new Callback<MessageResponse>() {
+                    @Override
+                    public void onResponse(Call<MessageResponse> call, Response<MessageResponse> response) {
 
-                                MessageResponse auxiliar = response.body();
-                               // responseHandler.setUserId(auxiliar.getId_user());
-                                Log.d("Response1", response.message());
-                                Log.d("Response2", auxiliar.getId_user());
+                        MessageResponse messageResponse = response.body();
+                        Log.d("Response1", response.message());
+                        Log.d("Response2", messageResponse.getId_user());
 
-                                preferences.edit().putString(USER_ID, auxiliar.getId_user()).apply();
-                                Log.d("Sharepreference***", USER_ID);
-
-                                Intent intent =  new Intent(context, ScanAndSuscribeActivity.class);
-                                startActivity(intent);
-                            }
-
-                            @Override
-                            public void onFailure(Call<MessageResponse> call, Throwable t) {
-
-                                Log.d(TAG, "Could not fetch users id: " + t.getMessage());
-                            }
-                        });
-
-                    } else {
+                        preferences.edit().putString(USER_ID, messageResponse.getId_user()).apply();
+                        Log.d("Sharepreference***", preferences.getString(USER_ID, null));
 
                         Intent intent =  new Intent(context, ScanAndSuscribeActivity.class);
                         startActivity(intent);
-                   }
-               }
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageResponse> call, Throwable t) {
+
+                        Log.d(TAG, "Could not fetch users id: " + t.getMessage());
+                    }
+                });
+
+            } else {
+
+
+                Intent intent =  new Intent(context, ScanAndSuscribeActivity.class);
+                startActivity(intent);
+            }
+        }
     }
 }
-
